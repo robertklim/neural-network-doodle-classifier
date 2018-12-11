@@ -56,20 +56,22 @@ function setup() {
     shuffle(training, true);
 
     // train
-    // for (let i = 0; i < training.length; i++) {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < training.length; i++) {
         let inputs = [];
         let data = training[i];
         for (let j = 0; j < data.length; j++) {
             inputs[j] = data[j] / 255.0; // normalize value
         }
         let label = training[i].label;
-        console.log(inputs);
-        console.log(label);
+        // console.log(inputs);
+        // console.log(label);
         let targets = [0, 0, 0];
         targets[label] = 1;
-        console.log(targets);
+        // console.log(targets);
+        nn.train(inputs, targets);
     }
+
+    console.log('trained');
 
     // let total = 100;
     // for (let i = 0; i < total; i++) {
