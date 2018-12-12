@@ -9,6 +9,7 @@ const TRAIN = 2;
 
 const trainButton = document.getElementById('train');
 const testButton = document.getElementById('test');
+const guessButton = document.getElementById('guess');
 
 let cats_data;
 let trains_data;
@@ -46,7 +47,7 @@ function trainEpoch(training) {
     shuffle(training, true);
     for (let i = 0; i < training.length; i++) {
         let data = training[i];
-        let inputs = data.map(x => x / 255);
+        let inputs = Array.from(data).map(x => x / 255);
         let label = training[i].label;
         // console.log(inputs);
         // console.log(label);
@@ -62,7 +63,8 @@ function testAll(testing) {
     let correct = 0;
     for (let i = 0; i < testing.length; i++) {
         let data = testing[i];
-        let inputs = data.map(x => x / 255);
+        let inputs = Array.from(data).map(x => x / 255);
+        console.log(inputs);
         let label = testing[i].label;
         let guess = nn.feedforward(inputs)
         let classification = guess.indexOf(max(guess));
@@ -79,7 +81,7 @@ function testAll(testing) {
 
 function setup() {
     createCanvas(280, 280);
-    background(0);
+    background(255);
 
     // prepare data
     prepareData(cats, cats_data, CAT);
@@ -115,6 +117,27 @@ function setup() {
         let percent = testAll(testing);
         console.log('correct percentage: ' + percent);
     });
+    guessButton.addEventListener('click', () => {
+        let inputs = [];
+        let img = get(); // get pixels from canvas into image
+        img.resize(28, 28) // resize
+        img.loadPixels();
+        for (let i = 0; i < len; i++) {
+            let bright = img.pixels[i * 4];
+            inputs[i] = (255 - bright) / 255.0;
+        }
+        let guess = nn.feedforward(inputs);
+        console.log(guess);
+        let classification = guess.indexOf(max(guess));
+        if (classification === CAT) {
+            console.log('cat');
+        } else if (classification === TRAIN) {
+            console.log('train');
+        } else if (classification === RAINBOW) {
+            console.log('rainbow');
+        }
+        // image(img, 0, 0);
+    });
 
     // for (let i = 0; i < epoch_num; i++) {
     //     // train
@@ -147,7 +170,7 @@ function setup() {
 
 function draw() {
     strokeWeight(8);
-    stroke(255);
+    stroke(0);
     if (mouseIsPressed) {
         line(pmouseX, pmouseY, mouseX, mouseY);
     }
