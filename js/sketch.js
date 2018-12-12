@@ -146,5 +146,9 @@ function setup() {
 }
 
 function draw() {
-
+    strokeWeight(8);
+    stroke(255);
+    if (mouseIsPressed) {
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
 }
