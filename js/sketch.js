@@ -32,9 +32,45 @@ function prepareData(category, data, label) {
             category.training[i].label = label;
         } else {
             category.testing[i - training_data_num] = data.bytes.subarray(offset, offset + len);
-            category.training[i - training_data_num].label = label;
+            category.testing[i - training_data_num].label = label;
         }
     }
+}
+
+// train
+function trainEpoch(training) {
+    shuffle(training, true);
+    for (let i = 0; i < training.length; i++) {
+        let data = training[i];
+        let inputs = data.map(x => x / 255);
+        let label = training[i].label;
+        // console.log(inputs);
+        // console.log(label);
+        let targets = [0, 0, 0];
+        targets[label] = 1;
+        // console.log(targets);
+        nn.train(inputs, targets);
+    }
+}
+
+// test
+function testAll(testing) {
+    let correct = 0;
+    for (let i = 0; i < testing.length; i++) {
+        let data = testing[i];
+        let inputs = data.map(x => x / 255);
+        let label = testing[i].label;
+        let guess = nn.feedforward(inputs)
+        let classification = guess.indexOf(max(guess));
+        // console.log(guess);
+        // console.log(classification);
+        // console.log(label);
+        if (classification === label) {
+            correct++;
+        }
+    }
+    let percent = correct / testing.length;
+    return percent;
 }
 
 function setup() {
@@ -53,26 +89,22 @@ function setup() {
     training = training.concat(cats.training);
     training = training.concat(rainbows.training);
     training = training.concat(trains.training);
-    shuffle(training, true);
+
+    // prepare testing data
+    let testing = [];
+    testing = testing.concat(cats.testing);
+    testing = testing.concat(rainbows.testing);
+    testing = testing.concat(trains.testing);
+    // console.log(testing);
 
     // train
-    for (let i = 0; i < training.length; i++) {
-        let inputs = [];
-        let data = training[i];
-        for (let j = 0; j < data.length; j++) {
-            inputs[j] = data[j] / 255.0; // normalize value
-        }
-        let label = training[i].label;
-        // console.log(inputs);
-        // console.log(label);
-        let targets = [0, 0, 0];
-        targets[label] = 1;
-        // console.log(targets);
-        nn.train(inputs, targets);
-    }
-
+    trainEpoch(training);
     console.log('trained');
-
+    
+    // test
+    let percent = testAll(testing);
+    console.log('correct percentage: ' + percent);
+    
     // let total = 100;
     // for (let i = 0; i < total; i++) {
     //     let img = createImage(28, 28);
