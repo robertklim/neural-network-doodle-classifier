@@ -1,6 +1,7 @@
 const len = 784;
 const total_data_num = 1000;
 const training_data_num = 800;
+const epoch_num = 5;
 
 const CAT = 0;
 const RAINBOW = 1;
@@ -97,13 +98,14 @@ function setup() {
     testing = testing.concat(trains.testing);
     // console.log(testing);
 
-    // train
-    trainEpoch(training);
-    console.log('trained');
-    
-    // test
-    let percent = testAll(testing);
-    console.log('correct percentage: ' + percent);
+    for (let i = 0; i < epoch_num; i++) {
+        // train
+        trainEpoch(training);
+        console.log('epoch #: ' + (i + 1));
+        // test
+        let percent = testAll(testing);
+        console.log('correct percentage: ' + percent);
+    }
     
     // let total = 100;
     // for (let i = 0; i < total; i++) {
