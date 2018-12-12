@@ -28,7 +28,11 @@ class NeuralNetwork {
         this.bias_o.randomize();
 
         // learning rate
-        this.learning_rate = 0.1;
+        this.learning_rate = 0.01;
+    }
+
+    setLearningRate(learning_rate) {
+        this.learning_rate = learning_rate;
     }
 
     feedforward(inputs_array) {
@@ -73,7 +77,7 @@ class NeuralNetwork {
 
         // calculate output errors
         let output_errors = Matrix.subtract(targets, outputs);
-        
+
         // let gradient = outputs * (1 - outputs);
         // calculate gradient
         let gradients = Matrix.map(outputs, dsigmoid);
@@ -91,9 +95,9 @@ class NeuralNetwork {
 
         // calculate hidden layer errors
         // simplify by using weights only, not (w1/w1+w2+...+wn) * e1
-        let weights_ho_t =  Matrix.transpose(this.weights_ho);
+        let weights_ho_t = Matrix.transpose(this.weights_ho);
         let hidden_errors = Matrix.multiply(weights_ho_t, output_errors);
-        
+
         // calculate hidden gradient
         let hidden_gradient = Matrix.map(hidden, dsigmoid);
         hidden_gradient.multiply(hidden_errors);
