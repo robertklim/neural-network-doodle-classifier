@@ -10,6 +10,7 @@ const TRAIN = 2;
 const trainButton = document.getElementById('train');
 const testButton = document.getElementById('test');
 const guessButton = document.getElementById('guess');
+const clearButton = document.getElementById('clear');
 
 let cats_data;
 let trains_data;
@@ -64,7 +65,7 @@ function testAll(testing) {
     for (let i = 0; i < testing.length; i++) {
         let data = testing[i];
         let inputs = Array.from(data).map(x => x / 255);
-        console.log(inputs);
+        // console.log(inputs);
         let label = testing[i].label;
         let guess = nn.feedforward(inputs)
         let classification = guess.indexOf(max(guess));
@@ -137,6 +138,9 @@ function setup() {
             console.log('rainbow');
         }
         // image(img, 0, 0);
+    });
+    clearButton.addEventListener('click', () => {
+        background(255);
     });
 
     // for (let i = 0; i < epoch_num; i++) {
