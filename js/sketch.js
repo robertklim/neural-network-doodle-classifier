@@ -1,11 +1,14 @@
 const len = 784;
 const total_data_num = 1000;
 const training_data_num = 800;
-const epoch_num = 5;
+const epoch_num = 1;
 
 const CAT = 0;
 const RAINBOW = 1;
 const TRAIN = 2;
+
+const trainButton = document.getElementById('train');
+const testButton = document.getElementById('test');
 
 let cats_data;
 let trains_data;
@@ -98,14 +101,29 @@ function setup() {
     testing = testing.concat(trains.testing);
     // console.log(testing);
 
-    for (let i = 0; i < epoch_num; i++) {
-        // train
+    let epochCounter = 0;
+    
+    // button events
+    trainButton.addEventListener('click', () => {
+        console.log('training...');
         trainEpoch(training);
-        console.log('epoch #: ' + (i + 1));
-        // test
+        epochCounter++;
+        console.log('training done: ' + epochCounter + ' epochs');
+    });
+    testButton.addEventListener('click', () => {
+        console.log('testing...');
         let percent = testAll(testing);
         console.log('correct percentage: ' + percent);
-    }
+    });
+
+    // for (let i = 0; i < epoch_num; i++) {
+    //     // train
+    //     trainEpoch(training);
+    //     console.log('epoch #: ' + (i + 1));
+    //     // test
+    //     let percent = testAll(testing);
+    //     console.log('correct percentage: ' + percent);
+    // }
     
     // let total = 100;
     // for (let i = 0; i < total; i++) {
